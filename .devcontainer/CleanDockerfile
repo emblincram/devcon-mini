@@ -1,0 +1,14 @@
+FROM ubuntu:22.04
+
+SHELL ["/bin/bash", "-c"]
+
+USER root
+
+RUN [ -d /mnt ] && echo "/mnt existiert" || echo "/mnt existiert nicht"
+RUN chmod -R a+w /mnt || true
+
+RUN rm -rf /mnt/* || true
+
+RUN echo "alias ll='ls -alhF --color=auto'" >> /etc/bash.bashrc
+
+CMD ["sleep", "5"]

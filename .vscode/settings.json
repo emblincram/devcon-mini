@@ -1,0 +1,31 @@
+{
+    "cSpell.words": [
+        "ccache",
+        "chrpath",
+        "cpio",
+        "debianutils",
+        "diffstat",
+        "eatmydata",
+        "figlet",
+        "graphviz",
+        "iputils",
+        "libegl",
+        "liblz",
+        "libsdl",
+        "libsystemd",
+        "multilib",
+        "nmap",
+        "noninteractive",
+        "NOPASSWD",
+        "pexpect",
+        "pyelftools",
+        "pylint",
+        "setuptools",
+        "socat",
+        "sshfs",
+        "texinfo",
+        "usermod",
+        "Yocto",
+        "zstd"
+    ]
+}

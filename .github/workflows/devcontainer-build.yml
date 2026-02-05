@@ -28,20 +28,27 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Log in to GitHub Container Registry
-        run: |
-          echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin || exit 1
+        run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin || exit 1
 
       - name: Set DATE_TAG
         run: echo "DATE_TAG=$(date +%Y%m%d-%H%M)" >> $GITHUB_ENV
 
-      - name: Build Docker Image
+      - name: Build Docker Images
         run: |
           docker build --cache-from=ghcr.io/${{ github.repository }}:latest \
                       -t ghcr.io/${{ github.repository }}:latest \
                       -t ghcr.io/${{ github.repository }}:$DATE_TAG \
                       -f .devcontainer/Dockerfile .
 
-      - name: Push Docker Image
+          docker build --cache-from=ghcr.io/${{ github.repository }}-clean:latest \
+                      -t ghcr.io/${{ github.repository }}-clean:latest \
+                      -t ghcr.io/${{ github.repository }}-clean:$DATE_TAG \
+                      -f .devcontainer/CleanDockerfile .
+
+      - name: Push Docker Images
         run: |
           docker push ghcr.io/${{ github.repository }}:latest
           docker push ghcr.io/${{ github.repository }}:$DATE_TAG
+
+          docker push ghcr.io/${{ github.repository }}-clean:latest
+          docker push ghcr.io/${{ github.repository }}-clean:$DATE_TAG

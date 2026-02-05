@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Ensure all package sources are up to date
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends eatmydata && \
+    apt-get install -y --no-install-recommends eatmydata &&\
     eatmydata apt-get upgrade -y
 
 # Install sudo first (to ensure correct configuration)
@@ -29,10 +29,12 @@ RUN eatmydata apt-get install -y --no-install-recommends \
     apt-utils \
     wget curl file rsync \
     xz-utils zstd lz4 liblz4-tool \
+    tmux screen \
     debianutils \
     iputils-ping \
     nano mc \
-    fuse3 sshfs
+    fuse3 sshfs \
+    repo
 
 # Development tools
 RUN eatmydata apt-get install -y --no-install-recommends \
@@ -42,6 +44,7 @@ RUN eatmydata apt-get install -y --no-install-recommends \
     texinfo \
     chrpath \
     socat \
+    nmap \
     cpio
 
 # Documentation
@@ -69,7 +72,8 @@ RUN eatmydata apt-get install -y --no-install-recommends \
 # Yocto-specific dependencies
 RUN eatmydata apt-get install -y --no-install-recommends \
     gawk \
-    libsystemd-dev
+    libsystemd-dev \
+    bmap-tools
 
 # Development libraries for graphics & UI
 RUN eatmydata apt-get install -y --no-install-recommends \
@@ -81,7 +85,7 @@ RUN rm -rf /var/lib/apt/lists/* \
     && rm -rf /tmp/*
 
 # Make python3 executable as python
-RUN ln -s /usr/bin/python3 /usr/local/bin/python
+RUN [ ! -e /usr/local/bin/python ] && ln -s /usr/bin/python3 /usr/local/bin/python
 
 ARG UID=1000
 ARG GID=1000
@@ -91,6 +95,8 @@ RUN groupadd -g ${GID} yocto && \
     echo "yocto ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 # RUN mkdir -p /home/yocto/.cache && chown -R yocto:yocto /home/yocto/.cache
+
+RUN echo "alias ll='ls -alhF --color=auto'" >> /etc/bash.bashrc
 
 USER yocto
 WORKDIR /home/yocto
